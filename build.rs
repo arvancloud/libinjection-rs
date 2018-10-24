@@ -1,3 +1,4 @@
+extern crate bindgen;
 extern crate git2;
 extern crate regex;
 
@@ -68,4 +69,20 @@ fn main() {
     } else {
         panic!("unable to make libinjection");
     }
+
+    println!("cargo:rustc-link-lib=static=injection");
+    println!("cargo:rustc-link-search={}", build_parent_dir.display());
+
+    let h_path = build_parent_dir.join("libinjection.h");
+    let bindings = bindgen::Builder::default()
+        .header(h_path.to_str().unwrap())
+        .generate()
+        .expect("Unable to generate bindings");
+
+    let mut out_path = env::current_dir().unwrap();
+    out_path.push("src");
+    out_path.push("bindings.rs");
+    bindings
+        .write_to_file(out_path)
+        .expect("Couldn't write bindings!");
 }
