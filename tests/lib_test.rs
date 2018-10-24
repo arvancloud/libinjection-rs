@@ -13,6 +13,7 @@ fn test_sqli() {
     assert!(fingerprint.is_empty());
 }
 
+#[test]
 fn test_xss() {
     let is_xss = xss("<script type='text/javascript'>alert('xss');</script>").unwrap();
     assert!(is_xss);

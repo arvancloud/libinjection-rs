@@ -5,18 +5,14 @@ extern crate regex;
 use git2::Repository;
 use regex::Regex;
 use std::env;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 
 const LIBINJECTION_URL: &'static str = "https://github.com/client9/libinjection";
 const BUILD_DIR_NAME: &'static str = "libinjection";
 
 fn clone_libinjection(build_dir: &Path, version: &str) -> Option<()> {
-    let repo = if build_dir.exists() {
-        Repository::open(build_dir).ok()?
-    } else {
-        Repository::clone(LIBINJECTION_URL, build_dir).ok()?
-    };
+    let repo = Repository::clone(LIBINJECTION_URL, build_dir).ok()?;
     let rev = repo.revparse_single(version).ok()?;
     repo.set_head_detached(rev.id()).ok()
 }
@@ -24,6 +20,7 @@ fn clone_libinjection(build_dir: &Path, version: &str) -> Option<()> {
 fn run_make(rule: &str, cwd: &Path) -> Option<bool> {
     let output = Command::new("make")
         .arg(rule)
+        .env("OUT_DIR", env::var("OUT_DIR").unwrap())
         .current_dir(cwd)
         .output()
         .ok()?;
@@ -50,8 +47,8 @@ fn fix_python_version() -> Option<()> {
 }
 
 fn main() {
-    let mut build_parent_dir = env::current_dir().unwrap();
-    build_parent_dir.push(BUILD_DIR_NAME);
+    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+    let mut build_parent_dir = out_path.join(BUILD_DIR_NAME);
 
     if clone_libinjection(build_parent_dir.as_path(), "v3.10.0").is_none() {
         panic!("unable to clone libinjection");
@@ -79,10 +76,7 @@ fn main() {
         .generate()
         .expect("Unable to generate bindings");
 
-    let mut out_path = env::current_dir().unwrap();
-    out_path.push("src");
-    out_path.push("bindings.rs");
     bindings
-        .write_to_file(out_path)
-        .expect("Couldn't write bindings!");
+        .write_to_file(out_path.join("bindings.rs"))
+        .expect("unable to write bindings");
 }
