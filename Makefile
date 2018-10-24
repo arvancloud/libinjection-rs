@@ -1,4 +1,7 @@
 clean:
 	rm -rf libinjection
 
-.PHONY: clean
+fix-python:
+	sed -i 's/python$$/python2/g' libinjection/src/*.py
+
+.PHONY: clean fix-python

@@ -8,3 +8,4 @@ authors = ["Navid <yaa110@gmail.com>"]
 [build-dependencies]
 bindgen = "~0.43"
 git2 = "~0.7"
+regex = "~1.0"
