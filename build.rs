@@ -51,13 +51,21 @@ fn fix_python_version() -> Option<()> {
 fn main() {
     let mut build_parent_dir = env::current_dir().unwrap();
     build_parent_dir.push(BUILD_DIR_NAME);
-    let build_dir = build_parent_dir.as_path();
 
-    if clone_libinjection(build_dir, "v3.10.0").is_none() {
+    if clone_libinjection(build_parent_dir.as_path(), "v3.10.0").is_none() {
         panic!("unable to clone libinjection");
     }
 
     if fix_python_version().is_none() {
         panic!("unable to fix python version");
+    }
+
+    build_parent_dir.push("src");
+    if let Some(success) = run_make("all", build_parent_dir.as_path()) {
+        if !success {
+            panic!("unable to make libinjection");
+        }
+    } else {
+        panic!("unable to make libinjection");
     }
 }
