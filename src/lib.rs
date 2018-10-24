@@ -1,3 +1,30 @@
+//! # libinjection
+//!
+//! Rust bindings for (libinjection)][1]
+//!
+//! [1]: https://github.com/client9/libinjection
+//!
+//! ## How to Use
+//!
+//! ```
+//! extern crate libinjection;
+//! 
+//! use libinjection::{sqli, xss};
+//! 
+//! fn main() {
+//!     let (is_sqli, fingerprint) = sqli("' OR '1'='1' --").unwrap();
+//!     assert!(is_sqli);
+//!     assert_eq!("s&sos", fingerprint);
+//! 
+//!     let is_xss = xss("<script type='text/javascript'>alert('xss');</script>").unwrap();
+//!     assert!(is_xss);
+//! }
+//! ```
+//!
+
+#![doc(html_root_url = "https://docs.rs/libinjection")]
+#![deny(missing_docs)]
+
 mod bindings;
 mod wrapper;
 
