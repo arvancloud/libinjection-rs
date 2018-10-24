@@ -1,0 +1,10 @@
+[package]
+name = "libinjection"
+version = "0.1.0"
+authors = ["Navid <yaa110@gmail.com>"]
+
+[dependencies]
+
+[build-dependencies]
+bindgen = "~0.43"
+git2 = "~0.7"
