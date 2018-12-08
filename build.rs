@@ -17,14 +17,18 @@ fn clone_libinjection(build_dir: &Path, version: &str) -> Option<()> {
     repo.set_head_detached(rev.id()).ok()
 }
 
-fn run_make(rule: &str, cwd: &Path) -> Option<bool> {
+fn run_make(rule: &str, cwd: &Path) -> bool {
     let output = Command::new("make")
         .arg(rule)
         .env("OUT_DIR", env::var("OUT_DIR").unwrap())
         .current_dir(cwd)
         .output()
-        .ok()?;
-    Some(output.status.success())
+        .unwrap();
+    if output.status.success() {
+        true
+    } else {
+        panic!("make error: {}", String::from_utf8_lossy(&output.stderr));
+    }
 }
 
 fn fix_python_version() -> Option<()> {
@@ -35,11 +39,7 @@ fn fix_python_version() -> Option<()> {
         .is_match(python_version.as_str())
     {
         let cwd = env::current_dir().ok()?;
-        if let Some(success) = run_make("fix-python", cwd.as_path()) {
-            if !success {
-                return None;
-            }
-        } else {
+        if !run_make("fix-python", cwd.as_path()) {
             return None;
         }
     }
@@ -59,11 +59,7 @@ fn main() {
     }
 
     build_parent_dir.push("src");
-    if let Some(success) = run_make("all", build_parent_dir.as_path()) {
-        if !success {
-            panic!("unable to make libinjection");
-        }
-    } else {
+    if !run_make("all", build_parent_dir.as_path()) {
         panic!("unable to make libinjection");
     }
 
