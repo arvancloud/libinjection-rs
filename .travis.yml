@@ -4,5 +4,7 @@ rust:
 os:
   - linux
 script:
-- cargo build
+- cargo build -j`nproc`
+- cargo clean
+- rm -rf target
 - cargo test -- --nocapture

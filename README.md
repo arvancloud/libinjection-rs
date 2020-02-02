@@ -10,7 +10,7 @@ Rust bindings for [libinjection](https://github.com/client9/libinjection).
 - Add `libinjection` to `dependencies` of `Cargo.toml`:
 
 ```toml
-libinjection = "0.1"
+libinjection = "0.2"
 ```
 
 - Import crate:
