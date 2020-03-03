@@ -5,6 +5,7 @@ extern crate regex;
 use git2::Repository;
 use regex::Regex;
 use std::env;
+use std::fs::remove_dir_all;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -49,6 +50,8 @@ fn fix_python_version() -> Option<()> {
 fn main() {
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
     let mut build_parent_dir = out_path.join(BUILD_DIR_NAME);
+
+    let _ = remove_dir_all(build_parent_dir.as_path());
 
     if clone_libinjection(build_parent_dir.as_path(), "v3.10.0").is_none() {
         panic!("unable to clone libinjection");
