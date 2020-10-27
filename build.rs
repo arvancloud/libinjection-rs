@@ -33,12 +33,14 @@ fn run_make(rule: &str, cwd: &Path) -> bool {
 }
 
 fn fix_python_version() -> Option<()> {
-    let output = Command::new("python").arg("-V").output().ok()?;
-    let python_version = String::from_utf8_lossy(&output.stdout).to_string();
-    if !Regex::new("Python 2.*")
-        .ok()?
-        .is_match(python_version.as_str())
-    {
+    if if let Ok(output) = Command::new("python").arg("-V").output() {
+        let python_version = String::from_utf8_lossy(&output.stdout).to_string();
+        !Regex::new("Python 2.*")
+            .ok()?
+            .is_match(python_version.as_str())
+    } else {
+        true
+    } {
         let cwd = env::current_dir().ok()?;
         if !run_make("fix-python", cwd.as_path()) {
             return None;
