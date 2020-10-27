@@ -1,6 +1,6 @@
 [package]
 name = "libinjection"
-version = "0.2.3"
+version = "0.2.4"
 authors = ["Navid <yaa110@gmail.com>"]
 license = "MIT/Apache-2.0"
 readme = "README.md"
@@ -16,6 +16,6 @@ categories = ["api-bindings", "external-ffi-bindings"]
 travis-ci = { repository = "arvancloud/libinjection-rs" }
 
 [build-dependencies]
-bindgen = "0.54"
+bindgen = "0.55"
 git2 = "0.13"
-regex = "1.3"
+regex = "1.4"
