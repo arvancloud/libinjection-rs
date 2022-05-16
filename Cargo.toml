@@ -1,6 +1,6 @@
 [package]
 name = "libinjection"
-version = "0.2.4"
+version = "0.2.5"
 authors = ["Navid <yaa110@gmail.com>"]
 license = "MIT/Apache-2.0"
 readme = "README.md"
